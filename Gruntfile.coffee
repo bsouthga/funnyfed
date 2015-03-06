@@ -22,6 +22,9 @@ module.exports = (grunt) ->
           'app/src/modeler/*.coffee'
         ]
         tasks: ['browserify']
+      css:
+        files: ["app/css/*.css"]
+        tasks: ["concat:css"]
     browserSync:
       bsFiles:
         src : [
@@ -34,9 +37,15 @@ module.exports = (grunt) ->
         server:
           baseDir: "app/"
 
-  # Coffee compiling, uglifying and watching in order
-  grunt.registerTask 'default', [
-    'browserify'
+  watch = [
     'browserSync'
     'watch'
   ]
+
+  prep = [
+    'browserify'
+    'concat:css'
+  ]
+
+  # Coffee compiling, uglifying and watching in order
+  grunt.registerTask 'default', prep.concat(watch)

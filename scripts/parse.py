@@ -11,7 +11,7 @@ import re
 
 laugh_regex = re.compile(r"""
   # name of jokester
-  (?P<name>(?:CHAIRMAN|M[RS]+)\.?\s+[A-Z\s]+)
+  (?P<name>(?:CHAIRMAN|M[RS]+)\.?\s+[A-Z\s]+\.?)
   # joke
   (?P<joke>
     (?:(?!(?:CHAIRMAN|M[RS]+)\.?\s+[A-Z]+).)*
@@ -40,31 +40,36 @@ def makeFullText():
 
   full_text = "\n".join([
     pdfToText(f)
-    for f in glob.glob('pdfs/*.pdf')
+    for f in glob.glob('../pdfs/*.pdf')
   ])
 
-  with open('full_text.txt', 'w') as out:
+  with open('../txt/full_text.txt', 'w') as out:
     out.write(full_text)
 
 
 def parse():
-  with open('full_text.txt') as fullfile:
+  with open('../txt/full_text.txt') as fullfile:
     matches = []
     for m in laugh_regex.finditer(fullfile.read()):
       df = m.groupdict()
       for joke in re.split(r"\[[Ll]aughter.*?\]", df['joke']):
         matches.append({
           "name" : df['name'],
-          "joke" : joke
+          "joke" : joke.strip()
         })
   return matches
 
 
 if __name__ == '__main__':
-  with open('matches.json', 'w') as outjson:
+  with open('../app/json/jokes.json', 'w') as outjson:
     jokes = parse()
-    print(len(jokes))
-    json.dump(jokes, outjson, indent=2, sort_keys=True)
+    out = {}
+    for joke in jokes:
+      try:
+        out[joke['name']].append(joke['joke'])
+      except KeyError:
+        out[joke['name']] = [joke['joke']]
+    json.dump(out, outjson, indent=2, sort_keys=True)
 
 
 

@@ -1,0 +1,27 @@
+html, body {
+  width: 100%;
+  font-family: Helvetica;
+}
+
+svg.chart {
+  display: block;
+  margin: 0 auto;
+}
+
+text.name {
+  font-size: 12px;
+  fill : #9477cb;
+}
+
+text.label {
+  font-size: 10px;
+  fill : #fff;
+}
+
+text.label.small {
+  fill : #9477cb;
+}
+
+.bar rect {
+  fill : #9477cb;
+}
