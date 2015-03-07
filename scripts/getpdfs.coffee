@@ -3,7 +3,6 @@
 #
 # scrape fed website for pdfs
 #
-ccle
 cheerio = require("cheerio")
 request = require("request")
 fs = require('fs')
@@ -28,7 +27,6 @@ for year in [1990..2008]
       for f in transcripts
         do (f) ->
           [..., filename] = f.split('/')
-          request "#{fed}#{f}", (e, res, body) ->
-            console.log "writing #{filename}"
-            if not e and res.statusCode is 200
-              fs.writeFile "../pdfs/#{filename}", body
+          outfname = "../pdfs/#{filename}"
+          request "#{fed}#{f}"
+            .pipe fs.createWriteStream outfname

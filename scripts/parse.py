@@ -28,12 +28,46 @@ def printable(s):
 def pdfToText(filename):
   with open(filename, 'rb') as inpdf:
     pdf = PyPDF2.PdfFileReader(inpdf)
+    if pdf.isEncrypted:
+      pdf.decrypt("")
     pdf_text = "\n".join([
       printable(pdf.getPage(n).extractText())
       for n in range(pdf.numPages)
     ])
 
   return pdf_text
+
+
+def fullJSON():
+
+  meeting = re.compile(r"""
+    .*
+    # year
+    (\d\d\d\d)
+    # month
+    (\d\d)
+    # day
+    (\d\d)
+    # kind
+    (\w+)
+    \.pdf
+  """, re.X)
+
+  out = []
+  for fname in glob.glob('../pdfs/*.pdf'):
+    print("parsing {}".format(fname))
+    year, month, day, kind = meeting.match(fname).groups()
+    text = pdfToText(fname)
+    out.append({
+      "year" : year,
+      "month" : month,
+      "day" : day,
+      "kind" : kind,
+      "text" : text
+    })
+
+  with open('../txt/full.json', 'w') as outjson:
+    json.dump(out, outjson)
 
 
 def makeFullText():
@@ -69,7 +103,9 @@ def toTSV(matches):
 
 if __name__ == '__main__':
 
-  toTSV(parse())
+  #toTSV(parse())
+
+  fullJSON()
 
   # with open('../app/json/jokes.json', 'w') as outjson:
   #   jokes = parse()
