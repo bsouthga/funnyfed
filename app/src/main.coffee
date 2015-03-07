@@ -4,7 +4,9 @@ d3 = require('d3')
 
 joke_arr = ({name: n, jokes: j.length} for n, j of joke_data)
 
-margin = { top: 10, right: 10, bottom: 10, left: 150 }
+joke_arr.sort (a, b) -> (a.jokes < b.jokes) - (b.jokes < a.jokes)
+
+margin = { top: 50, right: 10, bottom: 10, left: 150 }
 width = 500 - margin.left - margin.right
 height = 640 - margin.top - margin.bottom
 
@@ -14,6 +16,13 @@ svg = d3.select('body').append('svg')
     .attr('height', height + margin.top + margin.bottom)
   .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+svg.append('text')
+  .attr('class', 'title')
+  .text('Laughs scored at Federal Open Market Committee meetings')
+  .attr 'x', -> (width - margin.left - @getBBox().width)/2
+  .attr 'y', -> -@getBBox().height
+
 
 barHeight = height / joke_arr.length
 

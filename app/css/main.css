@@ -8,6 +8,11 @@ svg.chart {
   margin: 0 auto;
 }
 
+text.title {
+  font-size: 14px;
+  fill: #9477cb;
+}
+
 text.name {
   font-size: 12px;
   fill : #9477cb;

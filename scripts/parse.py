@@ -60,16 +60,26 @@ def parse():
   return matches
 
 
+def toTSV(matches):
+  with open('../txt/jokes.tsv', 'w') as outtsv:
+    outtsv.write("\n".join(["name\tjoke"] + [
+      "\t".join([j['name'], re.sub( '\s+', ' ', j['joke'] ).strip()])
+      for j in matches
+    ]))
+
 if __name__ == '__main__':
-  with open('../app/json/jokes.json', 'w') as outjson:
-    jokes = parse()
-    out = {}
-    for joke in jokes:
-      try:
-        out[joke['name']].append(joke['joke'])
-      except KeyError:
-        out[joke['name']] = [joke['joke']]
-    json.dump(out, outjson, indent=2, sort_keys=True)
+
+  toTSV(parse())
+
+  # with open('../app/json/jokes.json', 'w') as outjson:
+  #   jokes = parse()
+  #   out = {}
+  #   for joke in jokes:
+  #     try:
+  #       out[joke['name']].append(joke['joke'])
+  #     except KeyError:
+  #       out[joke['name']] = [joke['joke']]
+  #   json.dump(out, outjson, indent=2, sort_keys=True)
 
 
 
