@@ -70,52 +70,51 @@ def fullJSON():
     json.dump(out, outjson)
 
 
-def makeFullText():
-
-  full_text = "\n".join([
-    pdfToText(f)
-    for f in glob.glob('../pdfs/*.pdf')
-  ])
-
-  with open('../txt/full_text.txt', 'w') as out:
-    out.write(full_text)
-
 
 def parse():
-  with open('../txt/full_text.txt') as fullfile:
+  with open('../txt/full.json') as meetingjson:
+    meetings = json.load(meetingjson)
     matches = []
-    for m in laugh_regex.finditer(fullfile.read()):
-      df = m.groupdict()
-      for joke in re.split(r"\[[Ll]aughter.*?\]", df['joke']):
-        matches.append({
-          "name" : df['name'],
-          "joke" : joke.strip()
-        })
-  return matches
+    for meeting in meetings:
+      print("Parsing {kind} {month}/{day}/{year}".format(**meeting))
+      for m in laugh_regex.finditer(meeting['text']):
+        df = m.groupdict()
+        for joke in re.split(r"\[[Ll]aughter.*?\]", df['joke']):
+          matches.append({
+            "year" : meeting['year'],
+            "month" : meeting['month'],
+            "day" : meeting['day'],
+            "kind" : meeting['kind'],
+            "name" : df['name'],
+            "joke" : joke.strip()
+          })
+  with open('../app/json/jokes.json', 'w') as outjson:
+    json.dump(matches, outjson)
 
 
-def toTSV(matches):
-  with open('../txt/jokes.tsv', 'w') as outtsv:
-    outtsv.write("\n".join(["name\tjoke"] + [
-      "\t".join([j['name'], re.sub( '\s+', ' ', j['joke'] ).strip()])
-      for j in matches
-    ]))
+def perPerson():
+  with open('../app/json/jokes.json') as jokejson:
+    jokes = json.load(jokejson)
+  out = {}
+  for j in jokes:
+    record = {
+      "year" : j['year'],
+      "month" : j['month'],
+      "day" : j['day'],
+      "kind" : j['kind'],
+      "length" : len(j['joke'])
+    }
+    try:
+      out[j['name']].append(record)
+    except KeyError:
+      out[j['name']] = [record]
+
+  with open('../app/json/people.json', 'w') as people:
+    json.dump(out, people)
+
 
 if __name__ == '__main__':
-
-  #toTSV(parse())
-
-  fullJSON()
-
-  # with open('../app/json/jokes.json', 'w') as outjson:
-  #   jokes = parse()
-  #   out = {}
-  #   for joke in jokes:
-  #     try:
-  #       out[joke['name']].append(joke['joke'])
-  #     except KeyError:
-  #       out[joke['name']] = [joke['joke']]
-  #   json.dump(out, outjson, indent=2, sort_keys=True)
+  perPerson()
 
 
 
