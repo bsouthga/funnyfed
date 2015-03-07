@@ -3,19 +3,21 @@ html, body {
   font-family: Helvetica;
 }
 
-svg.chart {
+svg {
   display: block;
   margin: 0 auto;
 }
 
+svg text {
+  fill: #9477cb;
+}
+
 text.title {
   font-size: 14px;
-  fill: #9477cb;
 }
 
 text.name {
   font-size: 12px;
-  fill : #9477cb;
 }
 
 text.label {
@@ -29,4 +31,15 @@ text.label.small {
 
 .bar rect {
   fill : #9477cb;
+}
+
+.line {
+  fill: none;
+  stroke : #9477cb;
+}
+
+
+.axis .domain {
+  stroke : none;
+  fill : none;
 }
