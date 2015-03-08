@@ -35,11 +35,23 @@ text.label.small {
 
 .line {
   fill: none;
+  stroke-width:2px;
   stroke : #9477cb;
 }
 
+.grid line {
+  stroke-width: 1px;
+  stroke-dasharray: 2, 2;
+  stroke: #ccc;
+}
 
 .axis .domain {
   stroke : none;
   fill : none;
+}
+
+circle {
+  stroke-width: 2px;
+  stroke:#9477cb;
+  fill : #fff;
 }

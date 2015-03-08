@@ -27,9 +27,9 @@ for n, joke_list of joke_data
     else
       times[date] = 1
 
+
 time_data = ({value : n, date : +y} for y, n of times)
 
-console.log(time_data)
 
 timeplot time_data
 barplot joke_arr
