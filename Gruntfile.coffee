@@ -8,6 +8,23 @@ module.exports = (grunt) ->
       css:
         src: ['app/css/*.css']
         dest: 'app/bundle.css'
+    copy:
+      main:
+        files: [
+           {expand: true, cwd: 'app/', src: ['index.html'], dest: 'dist/'}
+        ]
+    cssmin:
+      deploy:
+        files:
+          'dist/bundle.css': ['app/bundle.css']
+    uglify:
+      deploy:
+        files:
+          'dist/bundle.js': ['app/bundle.js']
+    'gh-pages':
+      options:
+        base: 'dist'
+      src: ['**']
     browserify:
       dist:
         files:
@@ -47,5 +64,14 @@ module.exports = (grunt) ->
     'concat:css'
   ]
 
+  deploy = [
+    'copy:main'
+    'uglify:deploy'
+    'cssmin:deploy'
+    'gh-pages'
+  ]
+
   # Coffee compiling, uglifying and watching in order
   grunt.registerTask 'default', prep.concat(watch)
+  grunt.registerTask 'deploy', prep.concat(deploy)
+

@@ -2,3 +2,5 @@ pdfs/*
 node_modules/*
 app/bundle.*
 txt/*
+dist/*
+.grunt/*
