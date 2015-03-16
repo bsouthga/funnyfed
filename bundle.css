@@ -1,0 +1,57 @@
+html, body {
+  width: 100%;
+  font-family: Helvetica;
+}
+
+svg {
+  display: block;
+  margin: 0 auto;
+}
+
+svg text {
+  fill: #9477cb;
+}
+
+text.title {
+  font-size: 14px;
+}
+
+text.name {
+  font-size: 12px;
+}
+
+text.label {
+  font-size: 10px;
+  fill : #fff;
+}
+
+text.label.small {
+  fill : #9477cb;
+}
+
+.bar rect {
+  fill : #9477cb;
+}
+
+.line {
+  fill: none;
+  stroke-width:2px;
+  stroke : #9477cb;
+}
+
+.grid line {
+  stroke-width: 1px;
+  stroke-dasharray: 2, 2;
+  stroke: #ccc;
+}
+
+.axis .domain {
+  stroke : none;
+  fill : none;
+}
+
+circle {
+  stroke-width: 2px;
+  stroke:#9477cb;
+  fill : #fff;
+}
