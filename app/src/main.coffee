@@ -65,6 +65,6 @@ d3.select window
   .on "resize", ->
     clearTimeout resize_timeout
     resize_timeout = setTimeout ->
-      T.render time_total
-      B.render joke_arr
+      T.render()
+      B.render()
     , 100

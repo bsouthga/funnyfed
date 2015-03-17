@@ -179,3 +179,16 @@ circle {
   stroke:#9477cb;
   fill : #fff;
 }
+
+@media (max-width: 650px) {
+  .axis text {
+    font-size: 10px;
+  }
+}
+
+/* Larger than phablet */
+@media (max-width: 350px) {
+  .axis text {
+    font-size: 8px;
+  }
+}

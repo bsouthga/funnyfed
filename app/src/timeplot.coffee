@@ -71,6 +71,7 @@ module.exports = class TimePlot
 
     @x = d3.time.scale()
         .range [0, @width]
+        .nice()
 
     @y = d3.scale.linear()
         .range [@height, 0]
@@ -109,8 +110,8 @@ module.exports = class TimePlot
 
     @x.domain d3.extent @time_data, (d) -> d.date
 
-    greenspan = [@x(@x.domain()[0]), @x(new Date("2006-1-31"))]
-    bernanke = [@x(new Date("2006-2-1")), @x(@x.domain()[1])]
+    greenspan = [@x(@x.domain()[0]), @x(new Date("2006-01-31"))]
+    bernanke = [@x(new Date("2006-02-01")), @x(@x.domain()[1])]
 
 
     xAxisGrid = d3.svg.axis().scale @x

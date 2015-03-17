@@ -7,7 +7,7 @@ module.exports = class BarPlot
     @container = d3.select '#bar-chart'
     @property = "jokes"
 
-  sort : (@property) ->
+  sort : (@property, duration) ->
     @bars
       .sort (A, B) =>
         a = A[@property]
@@ -16,7 +16,7 @@ module.exports = class BarPlot
       .transition()
       .duration(2000)
       .attr 'transform',  (d, i) => "translate(0, #{@y(i)})"
-    @update()
+    return @update(null, duration)
 
 
   update : (joke_data, duration) ->
@@ -80,7 +80,7 @@ module.exports = class BarPlot
       .append 'g'
         .attr 'transform', 'translate(' + margin.left + ',' + margin.top + ')'
 
-    @barHeight = @height / joke_data.length
+    @barHeight = @height / @joke_data.length
 
     @x = x = d3.scale.linear()
           .range [0, @width]
@@ -91,7 +91,7 @@ module.exports = class BarPlot
 
     @bars = @svg.append 'g'
       .selectAll 'bar'
-      .data joke_data
+      .data @joke_data
       .enter().append 'g'
       .attr 'class', 'bar'
       .attr 'transform', (d, i) -> "translate(0, #{y(i)})"
@@ -106,6 +106,10 @@ module.exports = class BarPlot
     @bars.append('text')
       .attr 'class', 'label'
 
-    return @update @joke_data, 0
+
+    if joke_data
+      return @update @joke_data, 0
+    else
+      return @sort @property, 0
 
 
