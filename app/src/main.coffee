@@ -4,9 +4,14 @@
 # 03/07/15
 #
 
+d3 = require 'd3'
 BarPlot = require "./barplot.coffee"
 TimePlot = require "./timeplot.coffee"
 joke_data = require "../json/laughter.json"
+
+# open links in new tabs
+d3.selectAll 'a'
+  .attr 'target', '__blank'
 
 getJokes = (date, prop) ->
   joke_data["jokes"][date].sort (A, B) ->
