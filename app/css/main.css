@@ -1,6 +1,111 @@
 html, body {
   width: 100%;
   font-family: Helvetica;
+  color: #9477cb;
+}
+
+
+
+a {
+  color: inherit;
+}
+
+#header {
+  margin-top: 100px;
+  text-align: center;
+}
+
+#footer {
+  margin-bottom: 100px;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+#time-series,
+#bar-chart {
+  display: block;
+  width: 100%;
+}
+
+#buttons {
+  margin-top: 50px;
+  width : 100%;
+  text-align: center;
+}
+
+#buttons button {
+  color: inherit;
+}
+
+#time-series-container {
+  position: relative;
+}
+
+#plexiglass {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 300px;
+  display: block;
+  z-index: 5;
+}
+
+#tooltip {
+  font-size: 12pt;
+  z-index: 4;
+  font-size: 12px;
+  display: block;
+  position: absolute;
+  background: rgba(148, 119, 203, 0.85);
+  color:#fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+#tooltip:after, #tooltip:before {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+#tooltip:after {
+  border-color: rgba(0, 0, 0, 0);
+  border-top-color: rgba(0, 0, 0, 0);
+  border-width: 10px;
+  margin-left: -10px;
+}
+
+#tooltip:before {
+  border-color: rgba(0, 0, 0, 0);
+  border-top-color: rgba(148, 119, 203, 0.85);
+  border-width: 11px;
+  margin-left: -11px;
+}
+
+#tooltip span.title {
+  font-weight: bold;
+}
+
+#pre-text {
+  display: none;
+}
+
+#tooltip h6 {
+  border-bottom: 1px solid #fff;
+}
+
+@media(max-width: 650px) {
+  div#tooltip {
+    font-size: 10px;
+  }
 }
 
 svg {
@@ -51,6 +156,7 @@ text.label.small {
 }
 
 circle {
+  opacity: 0;
   stroke-width: 2px;
   stroke:#9477cb;
   fill : #fff;

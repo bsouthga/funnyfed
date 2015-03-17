@@ -18,18 +18,30 @@ joke_arr = ({
 joke_arr.sort (a, b) ->
   (a.jokes < b.jokes) - (b.jokes < a.jokes)
 
+console.log(joke_data)
+
 times = {}
 for n, joke_list of joke_data
   for j in joke_list
-    date = j.year
+    date = "#{j.year}-#{j.month}-#{j.day}"
     if times[date]
       times[date] += 1
     else
       times[date] = 1
 
 
-time_data = ({value : n, date : +y} for y, n of times)
-
+time_data = ({ value : n, date : new Date d } for d, n of times).sort (a, b) ->
+  (a.date < b.date) - (a.date > b.date)
 
 timeplot time_data
 barplot joke_arr
+
+resize_timeout = null
+
+d3.select window
+  .on 'resize', ->
+    clearTimeout resize_timeout
+    resize_timeout = setTimeout ->
+      timeplot time_data
+      barplot joke_arr
+    , 100

@@ -1,11 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
   <link rel="stylesheet" href="bundle.css">
 </head>
 <body>
+  <div class="container">
+    <div class="row" id="header">
+      <div class="one column"></div>
+      <div class="ten columns">
+        <h1>how funny is the FOMC?</h1>
+        <p>
+          a few charts showing who scored some laughs at Federal Open Market Committee meetings...
+        </p>
+      </div>
+      <div class="one column"></div>
+    </div>
+    <div class="row">
+      <div class="one column"></div>
+      <div class="ten columns" id="time-series-container">
+        <div id="time-series"></div>
+        <div id="plexiglass"></div>
+      </div>
+      <div class="one column"></div>
+    </div>
+    <div class="row">
+      <div class="one column"></div>
+      <div class="ten columns">
+        <div id="buttons">
+          <button>Total Laughs Scored</button>
+          <button>Success Percentage</button>
+        </div>
+        <div id="bar-chart"></div>
+      </div>
+      <div class="one column"></div>
+    </div>
+    <div class="row">
+      <div class="one column"></div>
+      <div class="ten columns">
+        <hr>
+        <div id="footer">
+          <a href="http://bsouth.ga">Ben Southgate</a> | 2015 | <a href="http://github.com/bsouthga/funnyfed/">view source on Github</a>
+        </div>
+      </div>
+      <div class="one column"></div>
+    </div>
+  </div>
+  <div id="tooltip"></div>
   <script src="bundle.js"></script>
 </body>
+
 </html>

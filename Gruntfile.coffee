@@ -35,8 +35,6 @@ module.exports = (grunt) ->
       coffee :
         files: [
           'app/src/*.coffee'
-          'app/src/interactive/*.coffee'
-          'app/src/modeler/*.coffee'
         ]
         tasks: ['browserify']
       css:

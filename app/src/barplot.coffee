@@ -3,11 +3,15 @@ d3 = require 'd3'
 
 module.exports = (joke_arr) ->
 
+  container = d3.select '#bar-chart'
+
+  bb = container.node().getBoundingClientRect()
+
   margin = { top: 50, right: 10, bottom: 10, left: 180 }
-  width = 600 - margin.left - margin.right
+  width = bb.width - margin.left - margin.right
   height = 2000 - margin.top - margin.bottom
 
-  svg = d3.select('body').append('svg')
+  svg = container.html('').append('svg')
       .attr('class', 'chart')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
