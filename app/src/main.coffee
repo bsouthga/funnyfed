@@ -4,44 +4,59 @@
 # 03/07/15
 #
 
-barplot = require './barplot.coffee'
-timeplot = require './timeplot.coffee'
-joke_data = require '../json/people.json'
+barplot = require "./barplot.coffee"
+TimePlot = require "./timeplot.coffee"
+joke_data = require "../json/laughter.json"
 
+getJokes = (date, prop) ->
+  joke_data["jokes"][date].sort (A, B) ->
+    a = A[prop]
+    b = B[prop]
+    (a < b) - (a > b)
 
-joke_arr = ({
-    name: n
-    jokes: j.length
-  } for n, j of joke_data)
-
-
-joke_arr.sort (a, b) ->
-  (a.jokes < b.jokes) - (b.jokes < a.jokes)
-
-console.log(joke_data)
-
-times = {}
-for n, joke_list of joke_data
-  for j in joke_list
-    date = "#{j.year}-#{j.month}-#{j.day}"
-    if times[date]
-      times[date] += 1
-    else
-      times[date] = 1
-
-
-time_data = ({ value : n, date : new Date d } for d, n of times).sort (a, b) ->
+date_sort = (a, b) ->
   (a.date < b.date) - (a.date > b.date)
 
-timeplot time_data
+time_total = for date, v of joke_data["meta"]
+  {value : v["jokes"], date : new Date date}
+
+time_per_page = for date, v of joke_data["meta"]
+  {value : (v["jokes"]/v["pages"]), date : new Date date}
+
+time_total.sort date_sort
+time_per_page.sort date_sort
+
+joke_arr = getJokes "total", "jokes"
+
+T = new TimePlot()
+
+T.render time_total
 barplot joke_arr
+
+
+button_click = (button, callback) ->
+  d3.select button
+    .on "click", ->
+      id = @id
+      d3.selectAll '.series.buttons button'
+        .classed 'selected', -> id == @id
+      callback()
+
+button_click "#per-page", ->
+  T.update time_per_page
+   .format (d) -> "#{Math.round(d*1000)/1000} laughs per page"
+
+button_click '#total-series', ->
+  T.update time_total
+   .format (d) -> "#{d} laugh#{if d != 1 then "s" else ""}"
+
 
 resize_timeout = null
 
 d3.select window
-  .on 'resize', ->
+  .on "resize", ->
     clearTimeout resize_timeout
     resize_timeout = setTimeout ->
-      timeplot time_data
+      T.render time_total
       barplot joke_arr
     , 100

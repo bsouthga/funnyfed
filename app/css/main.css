@@ -4,19 +4,22 @@ html, body {
   color: #9477cb;
 }
 
-
-
 a {
-  color: inherit;
+  color: #9477cb;
+}
+
+a:hover {
+  color: #9477cb;
+  font-weight: bold;
 }
 
 #header {
-  margin-top: 100px;
+  margin-top: 60px;
   text-align: center;
 }
 
 #footer {
-  margin-bottom: 100px;
+  margin-bottom: 60px;
   width: 100%;
   display: block;
   text-align: center;
@@ -28,14 +31,27 @@ a {
   width: 100%;
 }
 
-#buttons {
-  margin-top: 50px;
+.series.buttons {
+  margin-top: 40px;
+}
+
+.bar.buttons {
+  margin-top: 90px;
+}
+
+.buttons {
   width : 100%;
   text-align: center;
 }
 
-#buttons button {
+.buttons button {
   color: inherit;
+  border-color: inherit;
+}
+
+.buttons button.selected {
+  background-color: #9477cb;
+  color : #fff;
 }
 
 #time-series-container {
@@ -60,7 +76,7 @@ a {
   background: rgba(148, 119, 203, 0.85);
   color:#fff;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 2px;
   opacity: 0;
   white-space: nowrap;
 }
@@ -130,12 +146,13 @@ text.label {
   fill : #fff;
 }
 
-text.label.small {
+text.label.small, .bar rect {
   fill : #9477cb;
 }
 
-.bar rect {
-  fill : #9477cb;
+.arrow {
+  stroke-width: 1px;
+  stroke:#9477cb;
 }
 
 .line {

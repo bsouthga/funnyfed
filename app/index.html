@@ -3,50 +3,53 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+  <title>how funny is the FOMC?</title>
   <link rel="stylesheet" href="bundle.css">
 </head>
 <body>
   <div class="container">
     <div class="row" id="header">
-      <div class="one column"></div>
+      <div class="one column">&nbsp;</div>
       <div class="ten columns">
         <h1>how funny is the FOMC?</h1>
         <p>
-          a few charts showing who scored some laughs at Federal Open Market Committee meetings...
+          The Fed <a href="http://www.federalreserve.gov/monetarypolicy/fomchistorical2009.htm">released the transcripts of FOMC meetings</a> through 2009 and <a href="http://github.com/bsouthga/funnyfed/">I parsed them</a>, counting all the times [Laughter] was noted. Here a few charts showing the relative hilarity of Federal Open Market Committee meetings, and who is the biggest "jokester"...
         </p>
       </div>
-      <div class="one column"></div>
     </div>
     <div class="row">
-      <div class="one column"></div>
-      <div class="ten columns" id="time-series-container">
-        <div id="time-series"></div>
-        <div id="plexiglass"></div>
-      </div>
-      <div class="one column"></div>
-    </div>
-    <div class="row">
-      <div class="one column"></div>
+      <div class="one column">&nbsp;</div>
       <div class="ten columns">
-        <div id="buttons">
-          <button>Total Laughs Scored</button>
+        <div class="series buttons">
+          <h4>FOMC through the years</h4>
+          <button id="total-series" class="selected">Total Laughs</button>
+          <button id="per-page">Laughs Per Transcript Page</button>
+        </div>
+        <div id="time-series-container">
+          <div id="time-series"></div>
+          <div id="plexiglass"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="one column">&nbsp;</div>
+      <div class="ten columns">
+        <div class="bar buttons">
+          <h4>top comedians</h4>
+          <button class="selected">Total Jokes</button>
           <button>Success Percentage</button>
         </div>
         <div id="bar-chart"></div>
       </div>
-      <div class="one column"></div>
     </div>
     <div class="row">
-      <div class="one column"></div>
+      <div class="one column">&nbsp;</div>
       <div class="ten columns">
         <hr>
         <div id="footer">
           <a href="http://bsouth.ga">Ben Southgate</a> | 2015 | <a href="http://github.com/bsouthga/funnyfed/">view source on Github</a>
         </div>
       </div>
-      <div class="one column"></div>
     </div>
   </div>
   <div id="tooltip"></div>

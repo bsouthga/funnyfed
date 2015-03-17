@@ -9,6 +9,12 @@ import json
 import re
 
 
+speaking_regex = re.compile(r"""
+  # name of jokester
+  (?P<name>(?:CHAIRMAN|M[RS]+)\.?\s+[A-Z\s]+\.?)
+""", re.X | re.M | re.S)
+
+
 laugh_regex = re.compile(r"""
   # name of jokester
   (?P<name>(?:CHAIRMAN|M[RS]+)\.?\s+[A-Z\s]+\.?)
@@ -21,12 +27,12 @@ laugh_regex = re.compile(r"""
 """, re.X | re.M | re.S)
 
 
-def printable(s):
-  return ''.join(filter(lambda x: x in string.printable, s))
+# convert text string to only printable characters
+printable = lambda s: "".join(filter(lambda x: x in string.printable, s))
 
 
 def pdfToText(filename):
-  with open(filename, 'rb') as inpdf:
+  with open(filename, "rb") as inpdf:
     pdf = PyPDF2.PdfFileReader(inpdf)
     if pdf.isEncrypted:
       pdf.decrypt("")
@@ -35,10 +41,10 @@ def pdfToText(filename):
       for n in range(pdf.numPages)
     ])
 
-  return pdf_text
+  return {"text" : pdf_text, "pages" : pdf.numPages}
 
 
-def fullJSON():
+def meetingTextJSON():
 
   meeting = re.compile(r"""
     .*
@@ -54,67 +60,136 @@ def fullJSON():
   """, re.X)
 
   out = []
-  for fname in glob.glob('../pdfs/*.pdf'):
+  for fname in glob.glob("../pdfs/*.pdf"):
     print("parsing {}".format(fname))
     year, month, day, kind = meeting.match(fname).groups()
-    text = pdfToText(fname)
+    pdf = pdfToText(fname)
     out.append({
       "year" : year,
       "month" : month,
       "day" : day,
       "kind" : kind,
-      "text" : text
+      "pages" : pdf["pages"],
+      "text" : pdf["text"]
     })
 
-  with open('../txt/full.json', 'w') as outjson:
+  with open("../txt/meeting_text.json", "w") as outjson:
     json.dump(out, outjson)
 
 
 
 def parse():
-  with open('../txt/full.json') as meetingjson:
+
+  with open("../txt/meeting_text.json") as meetingjson:
+
     meetings = json.load(meetingjson)
-    matches = []
-    for meeting in meetings:
-      print("Parsing {kind} {month}/{day}/{year}".format(**meeting))
-      for m in laugh_regex.finditer(meeting['text']):
-        df = m.groupdict()
-        for joke in re.split(r"\[[Ll]aughter.*?\]", df['joke']):
-          matches.append({
-            "year" : meeting['year'],
-            "month" : meeting['month'],
-            "day" : meeting['day'],
-            "kind" : meeting['kind'],
-            "name" : df['name'],
-            "joke" : joke.strip()
-          })
-  with open('../app/json/jokes.json', 'w') as outjson:
-    json.dump(matches, outjson)
 
-
-def perPerson():
-  with open('../app/json/jokes.json') as jokejson:
-    jokes = json.load(jokejson)
-  out = {}
-  for j in jokes:
-    record = {
-      "year" : j['year'],
-      "month" : j['month'],
-      "day" : j['day'],
-      "kind" : j['kind'],
-      "length" : len(j['joke'])
+    data = {
+      "jokes" : [],
+      "mentions" : [],
+      "meta" : {}
     }
-    try:
-      out[j['name']].append(record)
-    except KeyError:
-      out[j['name']] = [record]
 
-  with open('../app/json/people.json', 'w') as people:
-    json.dump(out, people)
+    for meeting in meetings:
+
+      print("Parsing {kind} {month}/{day}/{year}".format(**meeting))
+
+      date = "{year}-{month}-{day}".format(**meeting)
+
+      data["meta"][date] = {
+        "kind" : meeting["kind"],
+        "pages" : meeting["pages"],
+        "jokes" : 0
+      }
+
+      # get times where laughter occured
+      for m in laugh_regex.finditer(meeting["text"]):
+        df = m.groupdict()
+        for joke in re.split(r"\[[Ll]aughter.*?\]", df["joke"]):
+          data["jokes"].append({
+            "date" : date,
+            "name" : df["name"]
+          })
+          data["meta"][date]["jokes"] += 1
+
+      # get all instances where someone spoke
+      for m in speaking_regex.finditer(meeting["text"]):
+        df = m.groupdict()
+        data["mentions"].append({
+          "date" : date,
+          "name" : df["name"]
+        })
+
+  with open("../app/json/full_data.json", "w") as outjson:
+    json.dump(data, outjson)
 
 
-if __name__ == '__main__':
-  perPerson()
+
+def clean(name):
+  name = name.replace(".", "").split(" ")[1]
+  if name == "GREENPAN":
+    name = "GREENSPAN"
+  if name == "D":
+    name = ""
+  return name
+
+
+
+# create json for vizualization
+def vizJSON():
+
+  with open("../app/json/full_data.json") as full_data_json:
+    full_data = json.load(full_data_json)
+
+  jokesters = set([clean(r["name"]) for r in full_data["jokes"]])
+
+  tmp = {n : {} for n in jokesters if n}
+
+
+  for m in full_data["mentions"]:
+    name = clean(m["name"])
+    date = m["date"]
+    if name in tmp:
+      if date not in tmp[name]:
+        tmp[name][date] = {"mentions" : 0, "jokes" : 0}
+      tmp[name][date]["mentions"] += 1
+
+  for j in full_data["jokes"]:
+    name = clean(j["name"])
+    date = j["date"]
+    if name:
+      tmp[name][date]["jokes"] += 1
+
+  # switch name / date in dict
+  out = {"meta" : full_data['meta'], "jokes" : {"total" : {}}}
+  for name in tmp:
+    out["jokes"]["total"][name] = {"mentions" : 0, "jokes" : 0}
+    for date in tmp[name]:
+      if date not in out["jokes"]:
+        out["jokes"][date] = {}
+      out["jokes"][date][name] = tmp[name][date]
+      out["jokes"]["total"][name]["jokes"] += tmp[name][date]["jokes"]
+      out["jokes"]["total"][name]["mentions"] += tmp[name][date]["mentions"]
+
+  # list of jokes for each date
+  for date in out["jokes"]:
+    out["jokes"][date] = [
+      {
+        "name" : name,
+        "jokes" : out["jokes"][date][name]["jokes"],
+        "mentions" : out["jokes"][date][name]["mentions"]
+      }
+      for name in out["jokes"][date]
+    ]
+
+  with open("../app/json/laughter.json", "w") as laughter:
+    json.dump(out, laughter)
+
+
+if __name__ == "__main__":
+  # meetingTextJSON()
+  # parse()
+  vizJSON()
 
 
 

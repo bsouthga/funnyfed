@@ -6,7 +6,11 @@ module.exports = (grunt) ->
   grunt.initConfig
     concat:
       css:
-        src: ['app/css/*.css']
+        src: [
+          'app/css/normalize.css'
+          'app/css/skeleton.css'
+          'app/css/main.css'
+        ]
         dest: 'app/bundle.css'
     copy:
       main:

@@ -7,7 +7,7 @@ module.exports = (joke_arr) ->
 
   bb = container.node().getBoundingClientRect()
 
-  margin = { top: 50, right: 10, bottom: 10, left: 180 }
+  margin = { top: 50, right: 10, bottom: 10, left: 100 }
   width = bb.width - margin.left - margin.right
   height = 2000 - margin.top - margin.bottom
 
