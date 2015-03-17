@@ -14,7 +14,7 @@
       <div class="ten columns">
         <h1>how funny is the FOMC?</h1>
         <p>
-          The Fed <a href="http://www.federalreserve.gov/monetarypolicy/fomchistorical2009.htm">released the transcripts of FOMC meetings</a> through 2009 and <a href="http://github.com/bsouthga/funnyfed/">I parsed them</a>, counting all the times [Laughter] was noted. Here a few charts showing the relative hilarity of Federal Open Market Committee meetings, and who is the biggest "jokester"...
+          The Fed <a href="http://www.federalreserve.gov/monetarypolicy/fomchistorical2009.htm">released the transcripts of FOMC meetings</a> through 2009 and <a href="http://github.com/bsouthga/funnyfed/">I parsed them</a>, counting all the times [Laughter] was noted. Here are two charts showing the relative hilarity of Federal Open Market Committee meetings, and who is the biggest "jokester"...
         </p>
       </div>
     </div>
@@ -22,7 +22,7 @@
       <div class="one column">&nbsp;</div>
       <div class="ten columns">
         <div class="series buttons">
-          <h4>FOMC through the years</h4>
+          <h4>through the years</h4>
           <button id="total-series" class="selected">Total Laughs</button>
           <button id="per-page">Laughs Per Transcript Page</button>
         </div>
@@ -37,9 +37,10 @@
       <div class="ten columns">
         <div class="bar buttons">
           <h4>top comedians</h4>
-          <button class="selected">Total Jokes</button>
-          <button>Success Percentage</button>
+          <button id="total-bar" class="selected">Total Jokes</button>
+          <button id="success-pct">Success Ratio</button>
         </div>
+        <div id="bar-title">Laughs scored at Federal Open Market Committee meetings: total and as a ratio of appearances</div>
         <div id="bar-chart"></div>
       </div>
     </div>
