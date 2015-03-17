@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd scripts
+coffee getpdfs.coffee
+python parse.py

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir -p app/json
+mkdir -p txt
+mkdir -p pdfs
+
+npm install
+npm install coffee-script -g
+npm install grunt-cli -g
+
+pip install PyPDF2

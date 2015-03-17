@@ -13,24 +13,16 @@ requirements
 - python 2.7+
 - PyPDF2
 
-install node dependencies...
-```shell
-npm install
+install dependencies
+```
+chmod +x ./install
+./install
 ```
 
-collecting the pdfs...
+collect and parse the pdfs...
 ```shell
-mkdir -p pdfs
-cd ./scripts
-coffee getpdfs.coffee
-```
-
-parsing pdfs...
-```shell
-mkdir -p app/json
-mkdir -p txt
-cd ./scripts
-python parse.py
+chmod +x ./scrape
+./scrape
 ```
 
 building vizualization...
