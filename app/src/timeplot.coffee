@@ -6,7 +6,6 @@ Tooltip = require "./tooltip.coffee"
 tooltip = new Tooltip()
 
 
-
 module.exports = class TimePlot
 
   constructor : ->
@@ -15,8 +14,6 @@ module.exports = class TimePlot
 
   format : (@fmt) -> @
 
-  dateBrackets : (@bracket_data) ->
-
   update : (time_data, duration) ->
     @time_data = time_data or @time_data
 
@@ -24,7 +21,7 @@ module.exports = class TimePlot
 
     @line_path.datum @time_data
       .transition()
-      .duration(duration ? 500)
+      .duration(duration ? 1000)
       .attr "d", @line
 
     @circles.data @time_data
@@ -68,7 +65,7 @@ module.exports = class TimePlot
 
     bb = @container.node().getBoundingClientRect()
 
-    @margin = {top: 40, right: 30, bottom: 30, left: 50}
+    @margin = top: 40, right: 30, bottom: 30, left: 50
     @width = bb.width - @margin.left - @margin.right
     @height = 300 - @margin.top - @margin.bottom
 
@@ -112,6 +109,10 @@ module.exports = class TimePlot
 
     @x.domain d3.extent @time_data, (d) -> d.date
 
+    greenspan = [@x(@x.domain()[0]), @x(new Date("2006-1-31"))]
+    bernanke = [@x(new Date("2006-2-1")), @x(@x.domain()[1])]
+
+
     xAxisGrid = d3.svg.axis().scale @x
       .ticks @numberOfTicks
       .tickSize -@height, 0
@@ -138,6 +139,40 @@ module.exports = class TimePlot
     y_title.attr "y", 0
       .attr "transform",  ->
         "rotate(270)translate(#{-h + @getBBox().width/2}, 0)"
+
+    @svg.append('line')
+      .attr 'class', 'chairman'
+      .attr({
+        "y1" : 0
+        "y2" : 0
+        "x1" : greenspan[0]
+        "x2" : greenspan[1]
+        })
+
+    @svg.append('line')
+      .attr 'class', 'chairman'
+      .attr({
+        "y1" : -10
+        "y2" : -10
+        "x1" : bernanke[0]
+        "x2" : bernanke[1]
+        })
+
+    @svg.append('text')
+      .text "Greenspan"
+      .attr({
+          "x" : ->
+            (greenspan[1] - greenspan[0]) / 2 + greenspan[0] - @getBBox().width/2
+          "y" : -5
+        })
+
+    @svg.append('text')
+      .text "Bernanke"
+      .attr({
+          "x" : ->
+            (bernanke[1] - bernanke[0]) / 2 + bernanke[0] - @getBBox().width/2
+          "y" : -15
+        })
 
     @svg.append "g"
       .classed "x", true

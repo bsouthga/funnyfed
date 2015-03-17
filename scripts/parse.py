@@ -187,8 +187,8 @@ def vizJSON():
 
 
 if __name__ == "__main__":
-  # meetingTextJSON()
-  # parse()
+  meetingTextJSON()
+  parse()
   vizJSON()
 
 

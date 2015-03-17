@@ -4,7 +4,7 @@
 # 03/07/15
 #
 
-barplot = require "./barplot.coffee"
+BarPlot = require "./barplot.coffee"
 TimePlot = require "./timeplot.coffee"
 joke_data = require "../json/laughter.json"
 
@@ -26,30 +26,38 @@ time_per_page = for date, v of joke_data["meta"]
 time_total.sort date_sort
 time_per_page.sort date_sort
 
-joke_arr = getJokes "total", "jokes"
+joke_arr = for j in getJokes "total", "jokes"
+  j.ratio = j['jokes'] / j['mentions']
+  j
+
 
 T = new TimePlot()
+B = new BarPlot()
 
 T.render time_total
-barplot joke_arr
+B.render joke_arr
 
-
-button_click = (button, callback) ->
+button_click = (button, plot, callback) ->
   d3.select button
     .on "click", ->
       id = @id
-      d3.selectAll '.series.buttons button'
+      d3.selectAll "#{plot}.buttons button"
         .classed 'selected', -> id == @id
       callback()
 
-button_click "#per-page", ->
+button_click "#per-page", ".series", ->
   T.update time_per_page
    .format (d) -> "#{Math.round(d*1000)/1000} laughs per page"
 
-button_click '#total-series', ->
+button_click '#total-series', ".series", ->
   T.update time_total
    .format (d) -> "#{d} laugh#{if d != 1 then "s" else ""}"
 
+button_click '#total-bar', ".bar", ->
+  B.sort("jokes")
+
+button_click '#success-pct', ".bar", ->
+  B.sort("ratio")
 
 resize_timeout = null
 
@@ -58,5 +66,5 @@ d3.select window
     clearTimeout resize_timeout
     resize_timeout = setTimeout ->
       T.render time_total
-      barplot joke_arr
+      B.render joke_arr
     , 100
