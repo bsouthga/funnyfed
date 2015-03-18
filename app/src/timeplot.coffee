@@ -93,14 +93,14 @@ class TimePlot
     return @
 
 
-  render : (time_data) ->
+  render : (time_data, alt_width) ->
 
     @time_data = time_data or @time_data
 
     bb = @container.node().getBoundingClientRect()
 
     @margin = top: 40, right: 40, bottom: 30, left: 20
-    @width = bb.width - @margin.left - @margin.right
+    @width = (alt_width or bb.width) - @margin.left - @margin.right
     @height = 300 - @margin.top - @margin.bottom
 
     @x = d3.time.scale()
@@ -272,9 +272,6 @@ reRender = ->
   resize_timeout = setTimeout ->
     T.render()
   , 100
-
-d3.select window
-  .on "resize", reRender
 
 pymChild = new pym.Child { renderCallback: reRender }
 

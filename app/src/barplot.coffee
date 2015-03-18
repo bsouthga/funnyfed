@@ -95,13 +95,13 @@ class BarPlot
 
 
 
-  render : (joke_data) ->
+  render : (joke_data, alt_width) ->
     @joke_data = joke_data or @joke_data
 
     bb = @container.node().getBoundingClientRect()
 
     margin = top: 0, right: 40, bottom: 10, left: 120
-    @width = width = bb.width - margin.left - margin.right
+    @width = width = (alt_width or bb.width) - margin.left - margin.right
     @height = 2000 - margin.top - margin.bottom
 
     @svg = @container.html('').append 'svg'
@@ -185,9 +185,6 @@ reRender = ->
   resize_timeout = setTimeout ->
     B.render()
   , 100
-
-d3.select window
-  .on "resize", reRender
 
 pymChild = new pym.Child { renderCallback: reRender }
 
