@@ -1,6 +1,8 @@
-# how funny is the FOMC?
+# How Funny is the FOMC?
 
-[view interactive](http://bsouthga.github.io/funnyfed/)
+### in the wild...
+
+[interactive](http://bsouthga.github.io/funnyfed/)
 
 [article in the Atlantic](http://bsouthga.github.io/funnyfed/)
 
@@ -15,14 +17,12 @@ requirements
 
 install dependencies
 ```
-chmod +x ./install
-./install
+sh ./install
 ```
 
 collect and parse the pdfs...
 ```shell
-chmod +x ./scrape
-./scrape
+sh ./scrape
 ```
 
 building vizualization...
