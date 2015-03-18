@@ -22,7 +22,7 @@ if params.small_version
     .classed 'small_version', true
   opacity = (d, i) => +(i < 18)
 else
-  opacity = => 1
+  opacity = -> d3.select(@).style('opacity')
 
 
 class BarPlot
@@ -32,15 +32,22 @@ class BarPlot
     @property = "jokes"
 
   sort : (@property, duration) ->
+
+    @bars.select('text.label')
+      .style('opacity', 0)
+
     @bars
       .sort (A, B) =>
         a = A[@property]
         b = B[@property]
         (a < b) - (a > b)
       .transition()
-      .duration(2000)
+      .duration(duration ? 2000)
       .attr 'transform',  (d, i) => "translate(0, #{@y(i)})"
-
+      .each 'end', (d, i) =>
+        if (i == 0)
+          @bars.select('text.label')
+            .style('opacity', 1)
 
     return @update(null, duration)
 
@@ -65,7 +72,7 @@ class BarPlot
       .transition()
       .duration(duration ? 2000)
       .attr 'x', -> -@getBBox().width - 10
-      .attr 'y', -> barHeight/2 + @getBBox().height/2
+      .attr 'y', -> barHeight/2 + @getBBox().height/4
       .style 'opacity', opacity
 
     @bars.select('rect')
@@ -77,8 +84,6 @@ class BarPlot
     @bars.select('text.label')
       .attr 'class', 'label'
       .text fmt
-      .transition()
-      .duration(duration ? 2000)
       .attr 'x', (d) ->
         pad = 5
         v = x(d[prop])
@@ -88,7 +93,8 @@ class BarPlot
         else
           d3.select(@).classed('small', true)
           (v + pad)
-      .attr 'y', -> barHeight/2 + @getBBox().height/2
+      .attr 'y', ->
+        barHeight/2 + @getBBox().height/4
       .style 'opacity', opacity
 
     return @
