@@ -165,30 +165,29 @@ def vizJSON():
   for name in tmp:
     out["jokes"]["total"][name] = {"mentions" : 0, "jokes" : 0}
     for date in tmp[name]:
-      if date not in out["jokes"]:
-        out["jokes"][date] = {}
-      out["jokes"][date][name] = tmp[name][date]
+      # if date not in out["jokes"]:
+      #   out["jokes"][date] = {}
+      # out["jokes"][date][name] = tmp[name][date]
       out["jokes"]["total"][name]["jokes"] += tmp[name][date]["jokes"]
       out["jokes"]["total"][name]["mentions"] += tmp[name][date]["mentions"]
 
   # list of jokes for each date
-  for date in out["jokes"]:
-    out["jokes"][date] = [
-      {
-        "name" : name,
-        "jokes" : out["jokes"][date][name]["jokes"],
-        "mentions" : out["jokes"][date][name]["mentions"]
-      }
-      for name in out["jokes"][date]
-    ]
+  out["jokes"]["total"] = [
+    {
+      "name" : name,
+      "jokes" : out["jokes"]["total"][name]["jokes"],
+      "mentions" : out["jokes"]["total"][name]["mentions"]
+    }
+    for name in out["jokes"]["total"]
+  ]
 
   with open("../app/json/laughter.json", "w") as laughter:
     json.dump(out, laughter)
 
 
 if __name__ == "__main__":
-  meetingTextJSON()
-  parse()
+  # meetingTextJSON()
+  # parse()
   vizJSON()
 
 
