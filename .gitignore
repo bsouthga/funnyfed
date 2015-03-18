@@ -2,6 +2,7 @@ pdfs/*
 node_modules/*
 app/bundle.*
 app/json/*
+app/*.js
 txt/*
 dist/*
 .grunt/*

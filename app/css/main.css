@@ -1,14 +1,18 @@
 html, body {
   width: 100%;
-  color: #9477cb;
+  color: #188754;
 }
 
 a {
-  color: #9477cb;
+  color: #188754;
+}
+
+span {
+  display: inline-block;
 }
 
 #header {
-  margin-top: 60px;
+  margin-top: 80px;
   text-align: center;
 }
 
@@ -25,21 +29,34 @@ a {
   text-align: center;
 }
 
+#barplot {
+  margin-top: 20px;
+}
+
+#timeplot {
+  margin-top: 10px;
+}
+
 #time-series,
 #bar-chart {
   display: block;
   width: 100%;
 }
 
-.series.buttons {
-  margin-top: 40px;
+#bar-chart-container {
+  height: 2040px;
 }
 
-.bar.buttons {
-  margin-top: 90px;
+#bar-chart-container.small_version {
+  height: 400px;
+}
+
+#bar-chart-container.small_version #bar-chart {
+  height: 360px;
 }
 
 .buttons {
+  margin-top: 20px;
   width : 100%;
   text-align: center;
 }
@@ -50,12 +67,14 @@ a {
 }
 
 .buttons button.selected {
-  background-color: #9477cb;
+  background-color: #188754;
   color : #fff;
 }
 
 #time-series-container {
   position: relative;
+  height: 340px;
+  padding: 0 10px;
 }
 
 #plexiglass {
@@ -67,13 +86,19 @@ a {
   z-index: 5;
 }
 
+#tooltip hr {
+  margin: 0px;
+  padding: 0px;
+}
+
 #tooltip {
+  text-align: center;
   font-size: 12pt;
   z-index: 4;
   font-size: 12px;
   display: block;
   position: absolute;
-  background: rgba(148, 119, 203, 0.85);
+  background: rgba(24, 135, 84, 0.85);
   color:#fff;
   padding: 5px 10px;
   border-radius: 2px;
@@ -101,7 +126,7 @@ a {
 
 #tooltip:before {
   border-color: rgba(0, 0, 0, 0);
-  border-top-color: rgba(148, 119, 203, 0.85);
+  border-top-color: rgba(24, 135, 84, 0.85);
   border-width: 11px;
   margin-left: -11px;
 }
@@ -130,7 +155,7 @@ svg {
 }
 
 svg text {
-  fill: #9477cb;
+  fill: #188754;
 }
 
 text.title {
@@ -147,18 +172,34 @@ text.label {
 }
 
 text.label.small, .bar rect {
-  fill : #9477cb;
+  fill : #188754;
 }
+
+div.source {
+  display: none;
+  font-size: 8pt;
+  width: 100%;
+  text-align: right;
+}
+
+div.source a {
+  padding-right: 20px;
+}
+
+div.source.show {
+  display: block;
+}
+
 
 .arrow {
   stroke-width: 1px;
-  stroke:#9477cb;
+  stroke:#188754;
 }
 
 .line, .chairman {
   fill: none;
   stroke-width:2px;
-  stroke : #9477cb;
+  stroke : #188754;
 }
 
 .grid line {
@@ -172,10 +213,47 @@ text.label.small, .bar rect {
   fill : none;
 }
 
+
+.ribbon {
+  /* positioning */
+  position: fixed;
+  padding: 5px 45px;
+  width: 128px;
+  /* top left of the page */
+  top: 50px;
+  left: -50px;
+  -webkit-transform: rotate(315deg);
+  -moz-transform: rotate(315deg);
+  -ms-transform: rotate(315deg);
+  transform: rotate(315deg);
+  /* effects with some shadow */
+  text-shadow: 0 0 0 #ffffff, 0 0 5px rgba(0, 0, 0, 0.3);
+  /* looks */
+  background-color: #188754;
+  color: #ffffff;
+  font-size: 13px;
+  text-decoration: none;
+  /* webkit antialias fix */
+  -webkit-backface-visibility: hidden;
+  letter-spacing: .5px;
+  -webkit-transition: box-shadow 0.3s linear;
+  -o-transition: box-shadow 0.3s linear;
+  -moz-transition: box-shadow 0.3s linear;
+  -ms-transition: box-shadow 0.3s linear;
+  -kthtml-transition: box-shadow 0.3s linear;
+  transition: box-shadow 0.3s linear;
+}
+
+
+a.ribbon:hover {
+  color: #fff;
+  box-shadow: 0 0 0 3px #188754, 0 0 20px -3px rgba(0, 0, 0, 0.5);
+}
+
 circle {
   opacity: 0;
   stroke-width: 2px;
-  stroke:#9477cb;
+  stroke:#188754;
   fill : #fff;
 }
 

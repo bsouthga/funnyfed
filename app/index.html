@@ -9,40 +9,34 @@
   <link rel="stylesheet" href="bundle.css">
 </head>
 <body>
+  <a target="__blank" href='http://github.com/bsouthga/funnyfed/' class="ribbon">View me on GitHub</a>
   <div class="container">
     <div class="row" id="header">
       <div class="one column">&nbsp;</div>
       <div class="ten columns">
-        <h1>how funny is the FOMC?</h1>
+        <h1>How Funny is the FOMC?</h1>
         <p>
-          The Fed <a href="http://www.federalreserve.gov/monetarypolicy/fomchistorical2009.htm">released the transcripts of FOMC meetings</a> through 2009 and <a href="http://github.com/bsouthga/funnyfed/">I parsed them</a>, counting all the times [Laughter] was noted. Here are two charts showing the relative hilarity of Federal Open Market Committee meetings, and who is the biggest "jokester"...
+          The Fed <a href="http://www.federalreserve.gov/monetarypolicy/fomchistorical2009.htm">released the transcripts of FOMC meetings</a> through 2009 and <a href="http://github.com/bsouthga/funnyfed/">I parsed them</a>, counting all the times <span>"[Laughter]"</span> was noted. Here are two charts showing the relative hilarity of Federal Open Market Committee meetings, and who is responsible for the most laughter.
         </p>
       </div>
     </div>
     <div class="row">
       <div class="one column">&nbsp;</div>
       <div class="ten columns">
-        <div class="series buttons">
-          <h4>through the years</h4>
-          <button id="total-series" class="selected">Total Laughs</button>
-          <button id="per-page">Laughs Per Transcript Page</button>
-        </div>
-        <div id="time-series-container">
-          <div id="time-series"></div>
-          <div id="plexiglass"></div>
-        </div>
+        <div id="timeseries"></div>
+        <script type="text/javascript" src="pym.min.js"></script>
+        <script>
+            var pymParent = new pym.Parent('timeseries', 'timeseries.html?hide_source=true', {});
+        </script>
       </div>
     </div>
     <div class="row">
       <div class="one column">&nbsp;</div>
       <div class="ten columns">
-        <div class="bar buttons">
-          <h4>top comedians</h4>
-          <button id="total-bar" class="selected">Total Jokes</button>
-          <button id="success-pct">Success Ratio</button>
-        </div>
-        <div id="bar-title">Laughs scored at Federal Open Market Committee meetings. Toggle between the total number of times a person made the group laugh, and the ratio of laughs to times holding the microphone.</div>
-        <div id="bar-chart"></div>
+        <div id="barplot"></div>
+        <script>
+          var pymParent = new pym.Parent('barplot', 'barplot.html?hide_source=true', {});
+        </script>
       </div>
     </div>
     <div class="row">
@@ -56,7 +50,5 @@
     </div>
   </div>
   <div id="tooltip"></div>
-  <script src="bundle.js"></script>
 </body>
-
 </html>

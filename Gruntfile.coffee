@@ -13,7 +13,8 @@ module.exports = (grunt) ->
     copy:
       main:
         files: [
-           {expand: true, cwd: 'app/', src: ['index.html'], dest: 'dist/'}
+           {expand: true, cwd: 'app/', src: ['*.html'], dest: 'dist/'}
+           {expand: true, cwd: 'app/', src: ['pym.min.js'], dest: 'dist/'}
         ]
     cssmin:
       deploy:
@@ -22,7 +23,8 @@ module.exports = (grunt) ->
     uglify:
       deploy:
         files:
-          'dist/bundle.js': ['app/bundle.js']
+          'dist/timeplot.js': ['app/timeplot.js']
+          'dist/barplot.js': ['app/barplot.js']
     'gh-pages':
       options:
         base: 'dist'
@@ -30,7 +32,8 @@ module.exports = (grunt) ->
     browserify:
       dist:
         files:
-          'app/bundle.js' : ['app/src/main.coffee']
+          'app/timeplot.js' : ['app/src/timeplot.coffee']
+          'app/barplot.js' : ['app/src/barplot.coffee']
         options:
           transform: ['coffeeify']
     watch:

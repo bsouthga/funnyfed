@@ -1,16 +1,29 @@
 #
-# time series plot
+# The Fed's Laughter, Through the Years
+# @bsouthga
 #
 
+
+d3 = require 'd3'
+joke_data = require "../json/laughter.json"
 Tooltip = require "./tooltip.coffee"
-tooltip = new Tooltip()
+pym = require 'pym.js'
+urlparams = require "./urlparams.coffee"
 
 
-module.exports = class TimePlot
+params = urlparams()
+
+if params.hide_source
+  d3.selectAll '.source'
+    .classed 'show', false
+
+
+class TimePlot
 
   constructor : ->
     @container = d3.select("#time-series")
     @fmt = (d) -> "#{d} laugh#{if d != 1 then "s" else ""}"
+    @tooltip = new Tooltip()
 
   format : (@fmt) -> @
 
@@ -40,7 +53,7 @@ module.exports = class TimePlot
     d3.select "#plexiglass"
       .on "mouseout", =>
         @circles.style "opacity", 0
-        tooltip.position()
+        @tooltip.position()
       .on "mousemove", =>
         @circles.style "opacity", 0
         mx = d3.mouse(@svg.node())[0]
@@ -53,8 +66,8 @@ module.exports = class TimePlot
             min = c.node
         data = min.data()[0]
         min.style "opacity", 1
-        tooltip
-          .text "#{dformat data.date} &mdash; #{@fmt data.value}"
+        @tooltip
+          .text "#{dformat data.date}<hr/>#{@fmt data.value}"
           .position min.node(), @svg.node(), true
     return @
 
@@ -65,7 +78,7 @@ module.exports = class TimePlot
 
     bb = @container.node().getBoundingClientRect()
 
-    @margin = top: 40, right: 30, bottom: 30, left: 50
+    @margin = top: 40, right: 40, bottom: 30, left: 20
     @width = bb.width - @margin.left - @margin.right
     @height = 300 - @margin.top - @margin.bottom
 
@@ -101,7 +114,7 @@ module.exports = class TimePlot
         .attr "viewBox", "0 -5 10 10"
         .attr "refX", 0
         .attr "refY", 0
-        .attr "fill", "#9477cb"
+        .attr "fill", "#188754"
         .attr "markerWidth", 6
         .attr "markerHeight", 6
         .attr "orient", "auto"
@@ -131,8 +144,8 @@ module.exports = class TimePlot
       .attr "class", "arrow"
       .attr "marker-end", "url(#end)"
       .attr
-        x1 : y_text_bb.width + 5
-        x2 : y_text_bb.width + 30
+        x1 : y_text_bb.width + 10
+        x2 : y_text_bb.width + 35
         y1 : -4
         y2 : -4
 
@@ -199,7 +212,49 @@ module.exports = class TimePlot
     return @update(time_data, 0)
 
 
+date_sort = (a, b) ->
+  (a.date < b.date) - (a.date > b.date)
 
+time_total = for date, v of joke_data["meta"]
+  {value : v["jokes"], date : new Date date}
 
+time_per_page = for date, v of joke_data["meta"]
+  {value : (v["jokes"]/v["pages"]), date : new Date date}
+
+time_total.sort date_sort
+time_per_page.sort date_sort
+
+T = new TimePlot()
+
+T.render time_total
+
+button_click = (button, plot, callback) ->
+  d3.select button
+    .on "click", ->
+      id = @id
+      d3.selectAll "#{plot}.buttons button"
+        .classed 'selected', -> id == @id
+      callback()
+
+button_click "#per-page", ".series", ->
+  T.update time_per_page
+   .format (d) -> "#{Math.round(d*1000)/1000} laughs<br/>per page"
+
+button_click '#total-series', ".series", ->
+  T.update time_total
+   .format (d) -> "#{d} laugh#{if d != 1 then "s" else ""}"
+
+resize_timeout = null
+
+reRender = ->
+  clearTimeout resize_timeout
+  resize_timeout = setTimeout ->
+    T.render()
+  , 100
+
+d3.select window
+  .on "resize", reRender
+
+pymChild = new pym.Child { renderCallback: reRender }
 
 

@@ -1,7 +1,31 @@
+#
+# Who is the funniest in the FOMC?
+# @bsouthga
+#
+
 
 d3 = require 'd3'
+joke_data = require "../json/laughter.json"
+pym = require 'pym.js'
+urlparams = require "./urlparams.coffee"
 
-module.exports = class BarPlot
+
+
+params = urlparams()
+
+if params.hide_source
+  d3.selectAll '.source'
+    .classed 'show', false
+
+if params.small_version
+  d3.select '#bar-chart-container'
+    .classed 'small_version', true
+  opacity = (d, i) => +(i < 18)
+else
+  opacity = => 1
+
+
+class BarPlot
 
   constructor : ->
     @container = d3.select '#bar-chart'
@@ -16,6 +40,8 @@ module.exports = class BarPlot
       .transition()
       .duration(2000)
       .attr 'transform',  (d, i) => "translate(0, #{@y(i)})"
+
+
     return @update(null, duration)
 
 
@@ -36,13 +62,17 @@ module.exports = class BarPlot
     x.domain [0, d3.max(@joke_data, (d) -> d[prop])]
 
     @bars.select('text.name')
+      .transition()
+      .duration(duration ? 2000)
       .attr 'x', -> -@getBBox().width - 10
       .attr 'y', -> barHeight/2 + @getBBox().height/2
+      .style 'opacity', opacity
 
     @bars.select('rect')
       .transition()
       .duration(duration ? 2000)
       .attr 'width', (d) => @x(d[prop])
+      .style 'opacity', opacity
 
     @bars.select('text.label')
       .attr 'class', 'label'
@@ -59,6 +89,7 @@ module.exports = class BarPlot
           d3.select(@).classed('small', true)
           (v + pad)
       .attr 'y', -> barHeight/2 + @getBBox().height/2
+      .style 'opacity', opacity
 
     return @
 
@@ -69,7 +100,7 @@ module.exports = class BarPlot
 
     bb = @container.node().getBoundingClientRect()
 
-    margin = top: 0, right: 10, bottom: 10, left: 120
+    margin = top: 0, right: 40, bottom: 10, left: 120
     @width = width = bb.width - margin.left - margin.right
     @height = 2000 - margin.top - margin.bottom
 
@@ -111,5 +142,54 @@ module.exports = class BarPlot
       return @update @joke_data, 0
     else
       return @sort @property, 0
+
+
+
+# open links in new tabs
+d3.selectAll 'a'
+  .attr 'target', '__blank'
+
+getJokes = (date, prop) ->
+  joke_data["jokes"][date].sort (A, B) ->
+    a = A[prop]
+    b = B[prop]
+    (a < b) - (a > b)
+
+joke_arr = for j in getJokes "total", "jokes"
+  j.ratio = j['jokes'] / j['mentions']
+  j
+
+
+button_click = (button, plot, callback) ->
+  d3.select button
+    .on "click", ->
+      id = @id
+      d3.selectAll "#{plot}.buttons button"
+        .classed 'selected', -> id == @id
+      callback()
+
+B = new BarPlot()
+
+B.render joke_arr
+
+button_click '#total-bar', ".bar", ->
+  B.sort("jokes")
+
+button_click '#success-pct', ".bar", ->
+  B.sort("ratio")
+
+resize_timeout = null
+
+reRender = ->
+  clearTimeout resize_timeout
+  resize_timeout = setTimeout ->
+    B.render()
+  , 100
+
+d3.select window
+  .on "resize", reRender
+
+pymChild = new pym.Child { renderCallback: reRender }
+
 
 
