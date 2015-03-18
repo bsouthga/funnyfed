@@ -7,7 +7,7 @@ import PyPDF2
 import glob
 import json
 import re
-
+import datetime
 
 speaking_regex = re.compile(r"""
   # name of jokester
@@ -141,9 +141,30 @@ def vizJSON():
   with open("../app/json/full_data.json") as full_data_json:
     full_data = json.load(full_data_json)
 
-  jokesters = set([clean(r["name"]) for r in full_data["jokes"]])
+  jokesters = {clean(r["name"]) for r in full_data["jokes"]}
 
   tmp = {n : {} for n in jokesters if n}
+
+  # chairman count
+  chairman = {
+    "BERNANKE" : { "pre" : 0, "chairman": 0, "post" : 0, "dates" : [
+      datetime.datetime(2006, 2, 1),
+      datetime.datetime(2014, 1, 31)
+    ]},
+    "GREENSPAN" : { "pre" : 0, "chairman": 0, "post" : 0, "dates" : [
+      datetime.datetime(1987, 8, 11),
+      datetime.datetime(2006, 1, 31)
+    ]},
+  }
+
+
+  def dateRange(d, bounds):
+    date_object = datetime.datetime.strptime(d, '%Y-%m-%d')
+    if date_object < bounds[0]:
+      return "pre"
+    if date_object > bounds[1]:
+      return "post"
+    return "chairman"
 
 
   for m in full_data["mentions"]:
@@ -159,6 +180,9 @@ def vizJSON():
     date = j["date"]
     if name:
       tmp[name][date]["jokes"] += 1
+    # count chairman jokes
+    if name in chairman:
+      chairman[name][dateRange(date, chairman[name]["dates"])] += 1
 
   # switch name / date in dict
   out = {"meta" : full_data['meta'], "jokes" : {"total" : {}}}
@@ -180,6 +204,8 @@ def vizJSON():
     }
     for name in out["jokes"]["total"]
   ]
+
+  print(chairman)
 
   with open("../app/json/laughter.json", "w") as laughter:
     json.dump(out, laughter)

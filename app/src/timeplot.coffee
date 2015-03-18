@@ -18,6 +18,27 @@ if params.hide_source
     .classed 'show', false
 
 
+months = [
+  "Jan"
+  "Feb"
+  "Mar"
+  "Apr"
+  "May"
+  "Jun"
+  "Jul"
+  "Aug"
+  "Sep"
+  "Oct"
+  "Nov"
+  "Dec"
+]
+
+
+parseDate = (d) ->
+  [Y,M,D] = d.split("-")
+  new Date "#{D} #{months[M-1]} #{Y} 12:00:00 GMT-0500 (EST)"
+
+
 class TimePlot
 
   constructor : ->
@@ -123,8 +144,8 @@ class TimePlot
 
     @x.domain d3.extent @time_data, (d) -> d.date
 
-    greenspan = [@x(@x.domain()[0]), @x(new Date("2006-01-31"))]
-    bernanke = [@x(new Date("2006-02-01")), @x(@x.domain()[1])]
+    greenspan = [@x(@x.domain()[0]), @x(parseDate("2006-01-31"))]
+    bernanke = [@x(parseDate("2006-02-01")), @x(@x.domain()[1])]
 
 
     xAxisGrid = d3.svg.axis().scale @x
@@ -216,10 +237,10 @@ date_sort = (a, b) ->
   (a.date < b.date) - (a.date > b.date)
 
 time_total = for date, v of joke_data["meta"]
-  {value : v["jokes"], date : new Date date}
+  {value : v["jokes"], date : parseDate date}
 
 time_per_page = for date, v of joke_data["meta"]
-  {value : (v["jokes"]/v["pages"]), date : new Date date}
+  {value : (v["jokes"]/v["pages"]), date : parseDate date}
 
 time_total.sort date_sort
 time_per_page.sort date_sort
