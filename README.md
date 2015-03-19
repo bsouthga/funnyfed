@@ -4,7 +4,7 @@
 
 [interactive](http://bsouthga.github.io/funnyfed/)
 
-[article in the Atlantic](http://bsouthga.github.io/funnyfed/)
+[article in the Atlantic](http://www.theatlantic.com/business/archive/2015/03/laughter-in-fed-transcripts/388027/)
 
 ### recreating this project
 
